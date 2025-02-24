@@ -33,14 +33,14 @@ const JobListPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Job List for {groupName}</h1>
 
       {jobs.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {jobs.map((job) => (
             <Link
               href={`/job-detail/${job.id}`}
               key={job.id}
               className="border p-4 rounded-lg shadow-md transition hover:shadow-lg"
             >
-              <img src={job.congViec?.hinhAnh} />
+              <img src={job.congViec?.hinhAnh} className="w-full" />
               <div className="flex gap-2 my-4">
                 <div>
                   <img

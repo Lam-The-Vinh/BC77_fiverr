@@ -37,12 +37,16 @@ const SearchPageContent: React.FC = () => {
             key={job.id}
             className="border p-4 rounded-lg shadow-md transition hover:shadow-lg"
           >
-            <img src={job.congViec?.hinhAnh} alt="Job Image" />
+            <img
+              src={job.congViec?.hinhAnh}
+              alt="Job Image"
+              className="w-full"
+            />
             <div className="flex gap-2 my-4">
               <div>
                 <img
                   src={job.avatar}
-                  className="w-full h-full object-contain rounded-md"
+                  className="w-10 h-10 object-cover rounded-full"
                   alt="Avatar"
                 />
               </div>

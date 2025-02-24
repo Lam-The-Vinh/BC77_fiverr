@@ -20,7 +20,7 @@ const FreelancerHero: React.FC = () => {
   };
 
   return (
-    <div className="container mt-24 relative bg-green-900 text-white py-16 rounded-xl">
+    <div className="container mt-24 relative bg-green-900 text-white py-16">
       <div className="relative z-10 text-center">
         <h1 className="text-3xl md:text-5xl font-bold">
           Scale your professional workforce with <i>freelancers</i>
