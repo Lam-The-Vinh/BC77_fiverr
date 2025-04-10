@@ -6,6 +6,7 @@ import Link from "next/link";
 
 export default function AdminPage() {
   return (
+
     <ProtectedRoute requiredRole="ADMIN">
     <div className="container my-24">
       <h1 className="text-center text-4xl font-bold my-4">Admin DashBoard</h1>
