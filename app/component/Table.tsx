@@ -15,7 +15,7 @@ interface TableProps<T> {
 
 export function Table<T>({ data, columns, className }: TableProps<T>) {
   return (
-    <div className={`w-full overflow-x-auto md:overflow-x-hidden ${className}`}>
+    <div className={`w-full overflow-x-auto ${className}`}>
       <table className="min-w-full table-auto">
         <thead className="bg-gray-50">
           <tr>
