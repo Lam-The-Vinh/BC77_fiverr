@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import AuthForm from "../../component/AuthForm";
 import { useDispatch } from "react-redux";
 import { signIn } from "../../redux/slices/authSlice";
@@ -10,9 +10,9 @@ const LoginPage = () => {
 
   const handleLogin = async (values: any) => {
     try {
-      await dispatch(signIn(values));
-    } catch (error) {
-      console.error("Login error:", error);
+      await dispatch(signIn(values)).unwrap();
+    } catch (error: any) {
+       throw new Error(error);
     }
   };
 

@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 export const loginValidationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
@@ -13,7 +15,7 @@ export const registerValidationSchema = Yup.object().shape({
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
-  phone: Yup.string().required("Phone is required"),
+  phone: Yup.string().required("Phone is required").matches(phoneRegExp, 'Phone number is not valid'),
   birthday: Yup.string()
     .matches(/^\d{4}-\d{2}-\d{2}$/, "Birthday must be in format YYYY-MM-DD")
     .required("Birthday is required"),

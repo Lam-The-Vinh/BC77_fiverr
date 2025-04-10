@@ -10,13 +10,16 @@ export default function RegisterPage() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleRegister = async (values: any) => {
-    const resultAction = await dispatch(signUp(values));
-
-    if (signUp.rejected.match(resultAction)) {
-      throw new Error(resultAction.payload as string);
+    try {
+      await dispatch(signUp(values)).unwrap();
+    } catch (error: any) {
+      throw new Error(error);
     }
-    return resultAction.payload;
   };
 
-  return <AuthForm mode="register" onSubmit={handleRegister} />;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <AuthForm mode="register" onSubmit={handleRegister} />;
+    </div>
+  );
 }

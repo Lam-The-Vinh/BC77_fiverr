@@ -1,13 +1,18 @@
+
 "use client";
 
+import { ProtectedRoute } from "../component/ProtectedRoute";
 import Link from "next/link";
 
 export default function AdminPage() {
   return (
-    <div className="container flex justify-around flex-col items-center lg:flex-row my-24">
+    <ProtectedRoute requiredRole="ADMIN">
+    <div className="container my-24">
+      <h1 className="text-center text-4xl font-bold my-4">Admin DashBoard</h1>
+      <div className="flex justify-around flex-col items-center lg:flex-row ">
       <Link
         href="/admin/users"
-        className="border p-4 rounded-lg shadow-md transition hover:shadow-lg"
+        className="border p-4 rounded-lg shadow-md transition hover:shadow-lg my-8 lg:my-0"
       >
         <div>
           <img
@@ -31,6 +36,8 @@ export default function AdminPage() {
           <h1 className="text-xl mt-5 mb-5 text-center">Job Management</h1>
         </div>
       </Link>
+      </div>
     </div>
+    </ProtectedRoute>
   );
 }
