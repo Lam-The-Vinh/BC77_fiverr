@@ -22,6 +22,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       router.push("/auth/login");
     } else if (user.role !== requiredRole) {
       router.push("/");
+    } else if (user.role === requiredRole) {
+      router.push("/admin");
     }
   }, [user, requiredRole, router]);
 
