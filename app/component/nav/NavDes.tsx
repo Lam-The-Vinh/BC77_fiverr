@@ -88,7 +88,7 @@ const NavDes: React.FC<NavDesProps> = ({ isScrolled }) => {
                 </Link>
               )}
               <span className="font-semibold text-gray-900">
-                Hello, {user.name || "User"}!
+                Hello, {user.name}!
               </span>
               <button
                 onClick={handleLogout}

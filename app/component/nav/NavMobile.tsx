@@ -7,6 +7,10 @@ import { logout } from "../../redux/slices/authSlice";
 const NavMobile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+  const handleLogout = () => {
+    dispatch(logout());
+    window.location.reload();
+  };
 
   return (
     <div className="md:hidden bg-white shadow-md">
@@ -17,16 +21,23 @@ const NavMobile = () => {
         <Link href="#" className="hover:text-gray-900">Become a Seller</Link>
 
         {user ? (
-          <>
-            <span className="font-semibold text-gray-900">Hello, {user.name || "User"}!</span>
-            <button
-              onClick={() => dispatch(logout())}
-              className="border border-red-500 text-red-500 px-4 py-1 rounded hover:bg-red-500 hover:text-white transition"
-            >
-              Logout
-            </button>
-          </>
-        ) : (
+            <>
+              {user.role === "ADMIN" && (
+                <Link href="/admin" className="hover:text-gray-900">
+                  Admin
+                </Link>
+              )}
+              <span className="font-semibold text-gray-900">
+                Hello, {user.name}!
+              </span>
+              <button
+                onClick={handleLogout}
+                className="border border-red-500 text-red-500 px-4 py-1 rounded-full hover:bg-red-500 hover:text-white transition"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
           <>
             <Link href="/login" className="hover:text-gray-900">Sign in</Link>
             <Link href="/register" className="border border-green-500 text-green-500 px-4 py-1 rounded hover:bg-green-500 hover:text-white transition">

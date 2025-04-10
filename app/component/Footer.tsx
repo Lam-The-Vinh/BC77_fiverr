@@ -1,32 +1,36 @@
+"use client";
+import { RootState, AppDispatch } from "../redux/store";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
-export default function Footer() {
+const Footer: React.FC = () => {
+  const { categories, loading } = useSelector(
+    (state: RootState) => state.categories
+  );
   return (
     <footer className="container border-t bg-white py-8 text-sm text-gray-600">
       <div className=" max-w-7xl">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 md:grid-cols-5">
           <div>
             <h3 className="mb-4 font-semibold text-gray-800">Categories</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#">Graphics & Design</Link>
-              </li>
-              <li>
-                <Link href="#">Digital Marketing</Link>
-              </li>
-              <li>
-                <Link href="#">Writing & Translation</Link>
-              </li>
-              <li>
-                <Link href="#">Video & Animation</Link>
-              </li>
-              <li>
-                <Link href="#">Music & Audio</Link>
-              </li>
-              <li>
-                <Link href="#">Business</Link>
-              </li>
-            </ul>
+            <div className="text-gray-600 text-[10px]">
+              <ul className="space-y-2">
+                {loading ? (
+                  <p>Loading...</p>
+                ) : (
+                  categories.map((category) => (
+                    <li key={category.id}>
+                      <Link
+                        href={`/category/${category.id}`}
+                        className="hover:text-gray-900 text-sm"
+                      >
+                        {category.tenLoaiCongViec}
+                      </Link>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
           </div>
 
           <div>
@@ -154,4 +158,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { useRouter } from "next/navigation";
 import {
   loginValidationSchema,
@@ -47,60 +47,70 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, setErrors }) => {
+        onSubmit={async (
+          values: any,
+          { setSubmitting, setErrors, setStatus }: FormikHelpers<any>
+        ) => {
           const processedValues = {
             ...values,
             gender: values.gender === "true",
             skill: values.skill
               ? values.skill
                   .split(",")
-                  .map((s) => s.trim())
-                  .filter((s) => s !== "")
+                  .map((s: string) => s.trim())
+                  .filter((s: string) => s !== "")
               : [],
             certification: values.certification
               ? values.certification
                   .split(",")
-                  .map((s) => s.trim())
-                  .filter((s) => s !== "")
+                  .map((s: string) => s.trim())
+                  .filter((s: string) => s !== "")
               : [],
             bookingJob: values.bookingJob
               ? values.bookingJob
                   .split(",")
-                  .map((s) => s.trim())
-                  .filter((s) => s !== "")
+                  .map((s: string) => s.trim())
+                  .filter((s: string) => s !== "")
               : [],
           };
 
           try {
             await onSubmit(processedValues);
-            router.push("/");
+              router.push("/");
           } catch (error: any) {
-            setErrors({ email: error.message });
+            setStatus(error.message)
           } finally {
             setSubmitting(false);
           }
         }}
       >
-        {({ isSubmitting }) => (
-          <Form className="flex flex-col space-y-4">
+        {({ isSubmitting, status, setStatus }) => (
+          <Form
+            onFocusCapture={() => {
+              if (status) setStatus("");
+            }}
+            className="flex flex-col space-y-4"
+          >
+            {status && (
+              <div className="text-red-500 text-center text-sm">{status}</div>
+            )}
+
             {mode === "register" && (
-              <>
-                <div>
-                  <label htmlFor="name" className="block font-medium">
-                    Name
-                  </label>
-                  <Field
-                    name="name"
-                    type="text"
-                    className="border p-2 w-full rounded"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-              </>
+              <div>
+                <label htmlFor="name" className="block font-medium">
+                  Name
+                </label>
+                <Field
+                  name="name"
+                  type="text"
+                  className="border p-2 w-full rounded"
+                />
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
             )}
 
             <div>
