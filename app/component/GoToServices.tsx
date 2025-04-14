@@ -34,7 +34,7 @@ export default function GoToServices() {
   return (
     <section className="container py-12">
       <h2 className="mb-6 text-xl font-bold text-gray-800">
-        Vontélle&apos;s go-to services
+        Go-to services
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {servicesData.map((service, index) => (

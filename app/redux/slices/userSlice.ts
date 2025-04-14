@@ -8,7 +8,7 @@ export interface User {
   password: string;
   phone: string;
   birthday: string;
-  avatar: string | null;
+  avatar: string;
   gender: boolean;
   role: string;
   skill: string[];
@@ -83,14 +83,13 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
       const updated = action.payload;
-      const index = state.users.findIndex((u) => u.id === updated.id);
-      if (index !== -1) {
-        state.users[index] = { ...updated };
-      }
-    });
+      state.users = state.users.map((user) =>
+        user.id === updated.id ? { ...updated } : user
+      );
+    });    
     builder.addCase(addUser.fulfilled, (state, action) => {
-      state.users.push(action.payload);
-    });
+      state.users = [action.payload, ...state.users];
+    });    
   },
 });
 

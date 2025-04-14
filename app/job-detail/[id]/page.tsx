@@ -31,17 +31,16 @@ const JobDetailPage: React.FC = () => {
     };
   }, [id, dispatch]);
 
-  if (loading) return <p className="container py-24">Loading job detail...</p>;
+  if (loading) return <p className="container my-48">Loading job detail...</p>;
   if (error)
-    return <p className="container py-24 text-red-500">Error: {error}</p>;
+    return <p className="container my-48 text-red-500">Error: {error}</p>;
 
   if (!detail) return <p>No job detail available</p>;
 
-  const stars = [1, 2, 3, 4, 5];
   const rating = Number(detail?.congViec?.saoCongViec) || 0;
 
   return (
-    <div className="container py-24">
+    <div className="container my-48">
       <nav className="text-sm text-gray-500 mb-4">
         <ol className="list-reset flex">
           <li>
@@ -151,10 +150,10 @@ const JobDetailPage: React.FC = () => {
               <p className="text-gray-700 mb-4">{detail.congViec.moTaNgan}</p>
 
               <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                <li>✔️ Good features</li>
-                <li>✔️ Good features</li>
-                <li>✔️ Good features</li>
-                <li>✔️ Unlimited Revisions</li>
+                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Good features</li>
+                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Good features</li>
+                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Good features</li>
+                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Unlimited Revisions</li>
               </ul>
 
               <button className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md text-center font-semibold mb-2">

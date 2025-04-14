@@ -8,7 +8,7 @@ export default function AdminPage() {
   return (
 
     <ProtectedRoute requiredRole="ADMIN">
-    <div className="container my-24">
+    <div className="container my-48">
       <h1 className="text-center text-4xl font-bold my-4">Admin DashBoard</h1>
       <div className="flex justify-around flex-col items-center lg:flex-row ">
       <Link

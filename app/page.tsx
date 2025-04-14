@@ -1,5 +1,4 @@
 "use client"
-import Header from "./component/Header";
 import Banner from "./component/Banner"
 import Categories from "./category/Categories";
 import GoToServices from "./component/GoToServices";

@@ -4,7 +4,7 @@ import React from "react";
 
 export type Column<T> = {
   header: string;
-  accessor: keyof T | ((item: T) => React.ReactNode);
+  body: keyof T | ((item: T) => React.ReactNode);
 };
 
 interface TableProps<T> {
@@ -35,14 +35,9 @@ export function Table<T>({ data, columns, className }: TableProps<T>) {
             <tr key={rowIndex}>
               {columns.map((col, colIndex) => {
                 const cellContent =
-                  typeof col.accessor === "function"
-                    ? col.accessor(row)
-                    : (row[col.accessor] as unknown as React.ReactNode);
+                  typeof col.body === "function" ? col.body(row) : (row[col.body] as React.ReactNode);
                 return (
-                  <td
-                    key={colIndex}
-                    className="px-4 py-2 whitespace-normal text-sm break-words"
-                  >
+                  <td key={colIndex} className="px-4 py-2 whitespace-normal text-sm break-words">
                     {cellContent}
                   </td>
                 );

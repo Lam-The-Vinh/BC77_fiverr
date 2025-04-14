@@ -73,13 +73,9 @@ export const updateJobRental = createAsyncThunk(
 
 export const deleteJobRental = createAsyncThunk(
   "jobRental/delete",
-  async (id: number, { rejectWithValue }) => {
-    try {
+  async (id: number) => {
       await jobRentalService.delete(id);
       return id;
-    } catch (err: any) {
-      return rejectWithValue(err.message);
-    }
   }
 );
 

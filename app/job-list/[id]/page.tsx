@@ -29,7 +29,7 @@ const JobListPage: React.FC = () => {
     jobs.length > 0 ? jobs[0].tenChiTietLoai : `Chi Tiết Loại ${id}`;
 
   return (
-    <div className="container py-24">
+    <div className="container my-48">
       <h1 className="text-2xl font-bold mb-4">Job List for {groupName}</h1>
 
       {jobs.length > 0 ? (

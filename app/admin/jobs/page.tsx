@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../component/Pagination";
 import type { AppDispatch, RootState } from "../../redux/store";
 import {
   fetchJobRentals,
@@ -11,10 +12,12 @@ import {
   JobRental,
 } from "../../redux/slices/jobsSlice";
 import { Table, Column } from "../../component/Table";
-import { SearchBar } from "../../component/SearchBar";
 import JobForm, { JobFormValues } from "../../component/JobForm";
 
 const JobRentalManagement: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector(
     (state: RootState) => state.jobs
@@ -24,6 +27,11 @@ const JobRentalManagement: React.FC = () => {
   useEffect(() => {
     dispatch(fetchJobRentals());
   }, [dispatch]);
+
+  const indexOfLastItem = currentPage * pageSize;
+  const indexOfFirstItem = indexOfLastItem - pageSize;
+  const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(data.length / pageSize);
 
   const handleDelete = (id: number) => {
     dispatch(deleteJobRental(id));
@@ -50,13 +58,13 @@ const JobRentalManagement: React.FC = () => {
   };
 
   const columns: Column<JobRental>[] = [
-    { header: "ID", accessor: "id" },
-    { header: "Job ID", accessor: "maCongViec" },
-    { header: "Renter ID", accessor: "maNguoiThue" },
-    { header: "Rental Date", accessor: "ngayThue" },
+    { header: "ID", body: "id" },
+    { header: "Job ID", body: "maCongViec" },
+    { header: "Renter ID", body: "maNguoiThue" },
+    { header: "Rental Date", body: "ngayThue" },
     {
       header: "Completed",
-      accessor: (row) => (
+      body: (row) => (
         <span className={row.hoanThanh ? "text-green-600" : "text-red-600"}>
           {row.hoanThanh ? "Yes" : "No"}
         </span>
@@ -64,7 +72,7 @@ const JobRentalManagement: React.FC = () => {
     },
     {
       header: "Actions",
-      accessor: (row) => (
+      body: (row) => (
         <div className="flex space-x-2">
           <button
             onClick={() => handleComplete(row.id)}
@@ -84,7 +92,7 @@ const JobRentalManagement: React.FC = () => {
   ];
 
   return (
-    <div className="py-24 container">
+    <div className="my-48 container">
       <h1 className="text-2xl font-bold mb-4">Job Management</h1>
       <div className="mb-4 flex justify-between items-center">
         <button
@@ -94,11 +102,14 @@ const JobRentalManagement: React.FC = () => {
           Add Job
         </button>
       </div>
-
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-600">{error}</p>}
-      <Table data={data} columns={columns} />
-
+      <Table data={currentData} columns={columns} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-md w-96">

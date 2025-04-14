@@ -33,7 +33,7 @@ const CategoryDetailPage: React.FC = () => {
     return <div className="container py-4 text-red-500">Error: {error}</div>;
 
   return (
-    <div className="container py-24">
+    <div className="container my-48">
       {detail && Array.isArray(detail.dsNhomChiTietLoai) ? (
         <div>
           <h1 className="text-2xl font-bold mb-4">{detail.tenLoaiCongViec}</h1>

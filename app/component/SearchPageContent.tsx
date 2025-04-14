@@ -25,7 +25,7 @@ const SearchPageContent: React.FC = () => {
   }, [query, dispatch]);
 
   return (
-    <div className="container py-24">
+    <div className="container my-48">
       <h1 className="text-2xl font-bold mb-4">Search Results for "{query}"</h1>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">Error: {error}</p>}

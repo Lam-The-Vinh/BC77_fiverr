@@ -87,9 +87,18 @@ const NavDes: React.FC<NavDesProps> = ({ isScrolled }) => {
                   Admin
                 </Link>
               )}
-              <span className="font-semibold text-gray-900">
-                Hello, {user.name}!
-              </span>
+              <div className="flex gap-3 my-4 items-center">
+              <div>
+                <img
+                  src={user.avatar}
+                  className="w-10 h-10 object-cover rounded-full"
+                  alt="Avatar"
+                />
+              </div>
+              <div className="font-semibold">
+                <h2>{user.name}</h2>
+              </div>
+            </div>
               <button
                 onClick={handleLogout}
                 className="border border-red-500 text-red-500 px-4 py-1 rounded-full hover:bg-red-500 hover:text-white transition"

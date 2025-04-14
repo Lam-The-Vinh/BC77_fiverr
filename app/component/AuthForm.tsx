@@ -40,7 +40,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
     mode === "login" ? loginValidationSchema : registerValidationSchema;
 
   return (
-    <div className="max-w-md my-24 container p-6 shadow-lg rounded-lg bg-white">
+    <div className="max-w-md my-48 container p-6 shadow-lg rounded-lg bg-white">
       <h2 className="text-2xl font-bold mb-4 text-center">
         {mode === "login" ? "Login" : "Register"}
       </h2>
