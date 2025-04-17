@@ -1,5 +1,3 @@
-import { Review } from "../redux/slices/reviewSlice";
-
 export function computeStarDistribution(reviews: Review[]) {
   const distribution: Record<number, number> = {
     1: 0,
@@ -28,5 +26,5 @@ export function computeAverageRating(reviews: Review[]) {
     sum += review.saoBinhLuan;
   }
 
-  return sum / reviews.length
+  return sum / reviews.length;
 }
