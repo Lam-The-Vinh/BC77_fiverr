@@ -1,32 +1,20 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchJobList } from "../../redux/slices/jobListSlice";
-import { AppDispatch, RootState } from "../../redux/store";
 import Link from "next/link";
+import { useJobList } from "../../hooks/useJobList";
 
 const JobListPage: React.FC = () => {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { jobs, loading, error } = useSelector(
-    (state: RootState) => state.jobList
-  );
+  const { jobs, loading, error } = useJobList(id);
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchJobList(id));
-    }
-  }, [id, dispatch]);
+  const groupName = jobs.length > 0 ? jobs[0].tenChiTietLoai : `Chi Tiết Loại ${id}`;
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
-
-  const groupName =
-    jobs.length > 0 ? jobs[0].tenChiTietLoai : `Chi Tiết Loại ${id}`;
 
   return (
     <div className="container my-48">

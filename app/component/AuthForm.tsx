@@ -8,11 +8,6 @@ import {
   registerValidationSchema,
 } from "../utils/validationSchema";
 
-interface AuthFormProps {
-  mode: "login" | "register";
-  onSubmit: (values: any) => Promise<any>;
-}
-
 const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
   const router = useRouter();
 
@@ -28,7 +23,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           password: "",
           phone: "",
           birthday: "",
-          avatar: "",
           gender: "",
           role: "USER",
           skill: "",
@@ -76,9 +70,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
 
           try {
             await onSubmit(processedValues);
-              router.push("/");
+            router.push("/");
           } catch (error: any) {
-            setStatus(error.message)
+            setStatus(error.message);
           } finally {
             setSubmitting(false);
           }
@@ -174,22 +168,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
                   />
                   <ErrorMessage
                     name="birthday"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="avatar" className="block font-medium">
-                    Avatar URL
-                  </label>
-                  <Field
-                    name="avatar"
-                    type="text"
-                    className="border p-2 w-full rounded"
-                  />
-                  <ErrorMessage
-                    name="avatar"
                     component="div"
                     className="text-red-500 text-sm"
                   />

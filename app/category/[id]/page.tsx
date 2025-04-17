@@ -1,36 +1,24 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
-import {
-  fetchCategoryDetail,
-  resetCategoryDetail,
-} from "../../redux/slices/categoryDetailSlice";
+import { useCategoryDetail } from "../../hooks/useCategoryDetail";
 import Link from "next/link";
 
 const CategoryDetailPage: React.FC = () => {
   const params = useParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const rawId = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { detail, loading, error } = useSelector(
-    (state: RootState) => state.categoryDetail
-  );
+  // Nếu không có id, ta không gọi hook
+  if (!rawId) {
+    return <div className="container py-4 text-red-500">ID not found</div>;
+  }
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchCategoryDetail(id));
-    }
-    return () => {
-      dispatch(resetCategoryDetail());
-    };
-  }, [id, dispatch]);
+  const id: string | number = rawId; // ✅ ép kiểu rõ ràng
+  const { detail, loading, error } = useCategoryDetail(id);
 
   if (loading) return <div className="container py-4">Loading...</div>;
-  if (error)
-    return <div className="container py-4 text-red-500">Error: {error}</div>;
+  if (error) return <div className="container py-4 text-red-500">Error: {error}</div>;
 
   return (
     <div className="container my-48">

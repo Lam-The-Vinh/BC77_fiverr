@@ -15,21 +15,25 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   autoSearch = false,
 }) => {
   const [query, setQuery] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
     if (autoSearch) {
       onSearch(value);
+      setHasSearched(true);
     }
   };
 
   const handleSearch = () => {
     onSearch(query);
+    setHasSearched(true);
   };
 
   const handleReset = () => {
     setQuery("");
+    setHasSearched(false);
     onSearch("");
   };
 
@@ -52,7 +56,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           </button>
         )}
       </div>
-      {query && (
+
+      {hasSearched && query && (
         <button
           onClick={handleReset}
           className="text-gray-500 hover:text-red-600 transition"

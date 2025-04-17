@@ -1,6 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authAPI } from "../../services/apiService";
 
+const initialState: AuthState = {
+  user: null,
+  status: "idle",
+  error: null,
+};
+
 export const signIn = createAsyncThunk(
   "auth/signIn",
   async (credentials: { email: string; password: string }, thunkAPI) => {
@@ -24,18 +30,6 @@ export const signUp = createAsyncThunk(
     }
   }
 );
-
-interface AuthState {
-  user: any;
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
-}
-
-const initialState: AuthState = {
-  user: null,
-  status: "idle",
-  error: null,
-};
 
 const authSlice = createSlice({
   name: "auth",

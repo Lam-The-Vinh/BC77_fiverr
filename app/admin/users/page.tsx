@@ -1,99 +1,44 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../redux/store";
-import Pagination from "../../component/Pagination";
-import { fetchUsers, addUser, updateUser, deleteUser, User } from "../../redux/slices/userSlice";
+import React, { useState } from "react";
 import { Table, Column } from "../../component/Table";
 import { SearchBar } from "../../component/SearchBar";
 import AddUserModal from "../../component/AddUserModal";
 import EditUserModal from "../../component/EditUserModal";
+import { useUsers } from "../../hooks/useUsers";
+import Pagination from "../../component/Pagination";
 
 const UsersPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-  const dispatch = useDispatch<AppDispatch>();
-  const { users, loading, error } = useSelector((state: RootState) => state.user);
+  const {
+    currentPage,
+    setCurrentPage,
+    filteredUsers,
+    handleSearch,
+    handleAddUser,
+    handleDelete,
+    handleEdit,
+    loading,
+    error,
+    currentData,
+    totalPages,
+  } = useUsers();
+
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(users);
-  const [isSearching, setIsSearching] = useState(false);
-  const [lastSearchQuery, setLastSearchQuery] = useState("");
+  const [editingUser, setEditingUser] = useState(null);
 
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!isSearching) {
-      setFilteredUsers(users);
-    }
-  }, [users, isSearching]);
-
-  useEffect(() => {
-    if (isSearching && lastSearchQuery) {
-      handleSearch(lastSearchQuery);
-    }
-  }, [users]);
-
-  const handleSearch = (query: string) => {
-    setLastSearchQuery(query);
-    setCurrentPage(1);
-    if (!query) {
-      setFilteredUsers(users);
-      setIsSearching(false);
-    } else {
-      const lowerQuery = query.toLowerCase();
-      setFilteredUsers(
-        users.filter(
-          (user: User) =>
-            user.name.toLowerCase().includes(lowerQuery) ||
-            user.email.toLowerCase().includes(lowerQuery)
-        )
-      );
-      setIsSearching(true);
-    }
-  };
-
-  const handleDelete = (id: number) => {
-    dispatch(deleteUser(id));
-  };
-
-  const handleEdit = (user: User) => {
-    setEditingUser(user);
-  };
-
-  const handleAddUser = async (values: any) => {
-    const resultAction = await dispatch(addUser(values));
-    if (addUser.rejected.match(resultAction)) {
-      const errorMessage = (resultAction.payload as string) || resultAction.error.message;
-      throw new Error(errorMessage);
-    }
-    if (isSearching && lastSearchQuery) {
-      handleSearch(lastSearchQuery);
-    }
-  };
-
-  const dataSource = filteredUsers;
-  const indexOfLastItem = currentPage * pageSize;
-  const indexOfFirstItem = indexOfLastItem - pageSize;
-  const currentData = dataSource.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(dataSource.length / pageSize);
-
-  const columns: Column<User>[] = [
+  const columns: Column<any>[] = [
     { header: "ID", body: "id" },
     { header: "Name", body: "name" },
     { header: "Email", body: "email" },
     { header: "Role", body: "role" },
-    { header: "Skill", body: (user: User) => user.skill?.join(", ") || "" },
-    { header: "Certification", body: (user: User) => user.certification?.join(", ") || "" },
-    { header: "BookingJob", body: (user: User) => user.bookingJob?.join(", ") || "" },
+    { header: "Skill", body: (user) => user.skill?.join(", ") || "" },
+    { header: "Certification", body: (user) => user.certification?.join(", ") || "" },
+    { header: "BookingJob", body: (user) => user.bookingJob?.join(", ") || "" },
     {
       header: "Actions",
-      body: (user: User) => (
+      body: (user) => (
         <div className="flex space-x-2">
-          <button onClick={() => handleEdit(user)} className="text-blue-600 hover:underline">
+          <button onClick={() => setEditingUser(user)} className="text-blue-600 hover:underline">
             Edit
           </button>
           <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:underline">
@@ -139,18 +84,8 @@ const UsersPage: React.FC = () => {
           user={editingUser}
           onClose={() => setEditingUser(null)}
           onSubmit={async (values) => {
-            const resultAction = await dispatch(
-              updateUser({ id: editingUser.id, data: values })
-            );
-            if (updateUser.rejected.match(resultAction)) {
-              throw new Error(
-                (resultAction.payload as string) || resultAction.error.message
-              );
-            }
+            await handleEdit(editingUser, values);
             setEditingUser(null);
-            if (isSearching && lastSearchQuery) {
-              handleSearch(lastSearchQuery);
-            }
           }}
         />
       )}

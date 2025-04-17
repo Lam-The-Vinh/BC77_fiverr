@@ -4,11 +4,6 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerValidationSchema } from "../utils/validationSchema";
 
-interface AddUserModalProps {
-  onClose: () => void;
-  onSubmit: (values: any) => Promise<void>;
-}
-
 const AddUserModal: React.FC<AddUserModalProps> = ({ onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -21,7 +16,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ onClose, onSubmit }) => {
             password: "",
             phone: "",
             birthday: "",
-            avatar: "",
             gender: "",
             role: "",
             skill: "",
@@ -121,20 +115,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ onClose, onSubmit }) => {
                 />
                 <ErrorMessage
                   name="birthday"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold">Avatar</label>
-                <Field
-                  type="text"
-                  name="avatar"
-                  className="w-full border rounded px-2 py-1"
-                />
-                <ErrorMessage
-                  name="avatar"
                   component="div"
                   className="text-red-500 text-sm"
                 />

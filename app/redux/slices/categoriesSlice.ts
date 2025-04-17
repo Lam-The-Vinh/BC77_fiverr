@@ -1,17 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { categoryAPI } from "../../services/apiService";
 
-interface Category {
-  id: number;
-  tenLoaiCongViec: string;
-}
-
-interface CategoryState {
-  categories: Category[];
-  loading: boolean;
-  error: string | null;
-}
-
 const initialState: CategoryState = {
   categories: [],
   loading: false,

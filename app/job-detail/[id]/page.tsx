@@ -1,82 +1,74 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchJobDetail,
-  resetJobDetail,
-} from "../../redux/slices/jobDetailSlice";
-import { RootState, AppDispatch } from "../../redux/store";
 import StarRating from "../../component/StarRating";
 import ReviewsSection from "../../component/ReviewsSection";
 import CommentsSection from "../../component/CommentsSection";
+import PurchaseModal from "../../component/PurchaseModal";
+import { useJobDetail } from "../../hooks/useJobDetail";
+import { showSuccess } from "../../utils/toastHelper";
+import { useRequireAuth } from "../../hooks/useRequireAuth";
 
 const JobDetailPage: React.FC = () => {
   const params = useParams();
+  const requireLogin = useRequireAuth();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { jobDetail, loading, error } = useJobDetail(id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { detail, loading, error } = useSelector(
-    (state: RootState) => state.jobDetail
-  );
   const maCongViec = Array.isArray(params.id) ? params.id[0] : params.id;
+  const handlePurchase = () => {
+    showSuccess("Purchase successful!");
+  };
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchJobDetail(id));
-    }
-    return () => {
-      dispatch(resetJobDetail());
-    };
-  }, [id, dispatch]);
+  if (loading) return <p className="text-gray-500">Đang tải dữ liệu...</p>;
+  if (error) return <p className="text-red-500">Lỗi: {error}</p>;
+  if (!jobDetail) return <p>No job detail available</p>;
 
-  if (loading) return <p className="container my-48">Loading job detail...</p>;
-  if (error)
-    return <p className="container my-48 text-red-500">Error: {error}</p>;
-
-  if (!detail) return <p>No job detail available</p>;
-
-  const rating = Number(detail?.congViec?.saoCongViec) || 0;
+  const rating = Number(jobDetail?.congViec?.saoCongViec) || 0;
 
   return (
     <div className="container my-48">
       <nav className="text-sm text-gray-500 mb-4">
-        <ol className="list-reset flex">
+        <ol className=" flex">
           <li>
-            <a href="#" className="text-blue-500 hover:underline">
-              {detail.tenLoaiCongViec}
-            </a>
-            <span className="mx-2">/</span>
+            <p>
+              {jobDetail.tenLoaiCongViec}
+              <span className="mx-2">/</span>
+            </p>
           </li>
           <li>
-            <a href="#" className="text-blue-500 hover:underline">
-              {detail.tenNhomChiTietLoai}
-            </a>
-            <span className="mx-2">/</span>
+            <p>
+              {jobDetail.tenNhomChiTietLoai}
+              <span className="mx-2">/</span>
+            </p>
           </li>
-          <li>{detail.tenChiTietLoai}</li>
+          <li>
+            {" "}
+            <p>{jobDetail.tenChiTietLoai}</p>
+          </li>
         </ol>
       </nav>
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-6">
         <div className="w-full lg:w-2/3">
           <h1 className="text-2xl font-bold mb-2">
-            {detail.congViec.tenCongViec}
+            {jobDetail.congViec.tenCongViec}
           </h1>
 
           <div className="flex items-center gap-3 mb-4">
             <img
-              src={detail.avatar}
-              alt={detail.tenNguoiTao}
+              src={jobDetail.avatar}
+              alt={jobDetail.tenNguoiTao}
               className="w-10 h-10 rounded-full object-cover"
             />
             <div className="text-sm">
-              <p className="font-bold">{detail.tenNguoiTao}</p>
+              <p className="font-bold">{jobDetail.tenNguoiTao}</p>
               <div className="flex gap-2 items-center flex-wrap">
                 <p className="text-gray-500">Level 2 Seller | </p>
                 <StarRating
                   rating={rating}
-                  totalReviews={detail.congViec.danhGia}
+                  totalReviews={jobDetail.congViec.danhGia}
                 />
                 <p>| 2 Orders in Queue</p>
               </div>
@@ -85,33 +77,35 @@ const JobDetailPage: React.FC = () => {
 
           <div className="mb-4">
             <img
-              src={detail.congViec.hinhAnh}
+              src={jobDetail.congViec.hinhAnh}
               className="w-full h-auto object-cover rounded-lg"
             />
           </div>
 
           <div className="text-gray-700 leading-relaxed">
             <h1 className="font-bold text-2xl py-4">About this job</h1>
-            <p className="mb-4">{detail.congViec.moTa}</p>
+            <p className="mb-4">{jobDetail.congViec.moTa}</p>
           </div>
           <div className="max-w-md py-4">
             <h2 className="text-xl font-semibold mb-4">About The Seller</h2>
 
             <div className="flex items-center">
               <img
-                src={detail.avatar}
+                src={jobDetail.avatar}
                 className="w-16 h-16 rounded-full object-cover mr-4"
               />
 
               <div>
-                <p className="font-bold text-gray-800">{detail.tenNguoiTao}</p>
+                <p className="font-bold text-gray-800">
+                  {jobDetail.tenNguoiTao}
+                </p>
                 <p className="text-sm text-gray-500 mb-2">
-                  {detail.tenChiTietLoai}
+                  {jobDetail.tenChiTietLoai}
                 </p>
 
                 <StarRating
                   rating={rating}
-                  totalReviews={detail.congViec.danhGia}
+                  totalReviews={jobDetail.congViec.danhGia}
                 />
               </div>
             </div>
@@ -144,20 +138,41 @@ const JobDetailPage: React.FC = () => {
               <div className="flex items-baseline justify-between gap-2 mb-2">
                 <p className="text-gray-600 text-2xl font-bold">Basic</p>
                 <p className="text-xl font-bold">
-                  USD${detail.congViec.giaTien}
+                  USD${jobDetail.congViec.giaTien}
                 </p>
               </div>
-              <p className="text-gray-700 mb-4">{detail.congViec.moTaNgan}</p>
+              <p className="text-gray-700 mb-4">
+                {jobDetail.congViec.moTaNgan}
+              </p>
 
               <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Good features</li>
-                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Good features</li>
-                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Good features</li>
-                <li className="flex items-center"><img src="/icon/tick.svg" className="w-5" alt="tick" /> Unlimited Revisions</li>
+                <li className="flex items-center">
+                  <img src="/icon/tick.svg" className="w-5" alt="tick" /> Good
+                  features
+                </li>
+                <li className="flex items-center">
+                  <img src="/icon/tick.svg" className="w-5" alt="tick" /> Good
+                  features
+                </li>
+                <li className="flex items-center">
+                  <img src="/icon/tick.svg" className="w-5" alt="tick" /> Good
+                  features
+                </li>
+                <li className="flex items-center">
+                  <img src="/icon/tick.svg" className="w-5" alt="tick" />{" "}
+                  Unlimited Revisions
+                </li>
               </ul>
 
-              <button className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md text-center font-semibold mb-2">
-                Continue USD${detail.congViec.giaTien}
+              <button
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md text-center font-semibold mb-2"
+                onClick={() => {
+                  const isAuthenticated = requireLogin();
+                  if (!isAuthenticated) return;
+                  setIsModalOpen(true);
+                }}
+              >
+                Continue USD${jobDetail.congViec.giaTien}
               </button>
 
               <button className="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 py-2 rounded-md text-center text-sm">
@@ -167,6 +182,12 @@ const JobDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <PurchaseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handlePurchase}
+        price={jobDetail.congViec.giaTien}
+      />
     </div>
   );
 };

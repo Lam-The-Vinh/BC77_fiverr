@@ -1,18 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { jobRentalService } from "../../services/apiService";
-export interface JobRental {
-  id: number;
-  maCongViec: number;
-  maNguoiThue: number;
-  ngayThue: string;
-  hoanThanh: boolean;
-}
-
-interface JobRentalState {
-  data: JobRental[];
-  loading: boolean;
-  error: string | null;
-}
 
 const initialState: JobRentalState = {
   data: [],
@@ -74,8 +61,8 @@ export const updateJobRental = createAsyncThunk(
 export const deleteJobRental = createAsyncThunk(
   "jobRental/delete",
   async (id: number) => {
-      await jobRentalService.delete(id);
-      return id;
+    await jobRentalService.delete(id);
+    return id;
   }
 );
 

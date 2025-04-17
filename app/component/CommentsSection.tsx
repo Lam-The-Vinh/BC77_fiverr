@@ -1,41 +1,29 @@
+// CommentsSection.tsx
+
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCommentsByJob, resetComments } from "../redux/slices/commentSlice";
-import { RootState, AppDispatch } from "../redux/store";
+import React from "react";
+import { useComments } from "../hooks/useComments";
 import StarRating from "./StarRating";
 
-interface CommentsSectionProps {
-  maCongViec: string | number;
-}
-
 const CommentsSection: React.FC<CommentsSectionProps> = ({ maCongViec }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { comments, loading, error } = useSelector((state: RootState) => state.comments);
-
-  const [searchText, setSearchText] = useState("");
-
-  useEffect(() => {
-    dispatch(fetchCommentsByJob(maCongViec));
-    return () => {
-      dispatch(resetComments());
-    };
-  }, [dispatch, maCongViec]);
+  const {
+    loading,
+    error,
+    searchText,
+    setSearchText,
+    sortOption,
+    setSortOption,
+    sortedComments,
+    formatDateToDDMMYYYY,
+  } = useComments(maCongViec);
 
   if (loading) return <p>Loading comments...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
-  let filteredComments = comments.filter((c) => {
-    const matchSearch =
-    (c.tenNguoiBinhLuan || "").toLowerCase().includes(searchText.toLowerCase()) ||
-    (c.noiDung || "").toLowerCase().includes(searchText.toLowerCase());
-    return matchSearch
-  });
-
   return (
     <div>
-    <h1 className="font-bold text-2xl">Filter</h1>
+      <h1 className="font-bold text-2xl">Filter</h1>
       <div className="flex gap-2 py-4">
         <input
           type="text"
@@ -44,9 +32,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ maCongViec }) => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button className="border p-2 rounded bg-gray-100 hover:bg-gray-200">
-          🔍
-        </button>
       </div>
 
       <div className="flex items-center gap-4 mb-4">
@@ -54,6 +39,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ maCongViec }) => {
           <span>Sort By</span>
           <select
             className="border rounded px-2 py-1"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
           >
             <option value="mostRelevant">Most relevant</option>
             <option value="newest">Newest</option>
@@ -61,8 +48,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ maCongViec }) => {
         </label>
       </div>
 
-      {filteredComments.map((comment) => (
-        <div key={comment.id} className="border rounded p-4 mb-4 bg-white shadow-sm">
+      {sortedComments.map((comment) => (
+        <div
+          key={comment.id}
+          className="border rounded p-4 mb-4 bg-white shadow-sm"
+        >
           <div className="flex items-center gap-2 mb-2">
             <img
               src={comment.avatar}
@@ -81,9 +71,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ maCongViec }) => {
           <p className="mt-2 text-gray-700">{comment.noiDung}</p>
 
           <div className="flex items-center gap-4 text-sm text-gray-500 mt-2">
-            <span>
-              {comment.ngayBinhLuan}
-            </span>
+            <span>{formatDateToDDMMYYYY(new Date(comment.ngayBinhLuan))}</span>
           </div>
 
           <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">

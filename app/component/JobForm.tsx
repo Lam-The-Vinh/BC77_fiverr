@@ -2,29 +2,18 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { jobFormValidationSchema } from "../utils/validationSchema";
 
-export interface JobFormValues {
-  jobId: string;
-  renterId: string;
-  renterDate: string;
-  completed: boolean;
-}
-
-interface JobFormProps {
-  initialValues: JobFormValues;
-  onSubmit: (values: JobFormValues) => void;
-  onCancel: () => void;
-}
-
 const JobForm: React.FC<JobFormProps> = ({
   initialValues,
   onSubmit,
-  onCancel,
+  onClose,
 }) => {
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={jobFormValidationSchema}
-      onSubmit={(values) => onSubmit(values)}
+      onSubmit={async (values) => {
+        await onSubmit(values); // 👈 Gọi đúng kiểu Promise
+      }}
     >
       {({ isSubmitting, values }) => (
         <Form className="space-y-4">
@@ -109,7 +98,7 @@ const JobForm: React.FC<JobFormProps> = ({
             </button>
             <button
               type="button"
-              onClick={onCancel}
+              onClick={onClose}
               className="bg-gray-300 text-black px-4 py-2 rounded-md"
             >
               Cancel

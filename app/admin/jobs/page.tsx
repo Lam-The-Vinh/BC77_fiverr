@@ -1,61 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useJobRentals } from "../../hooks/useJobRentals";
 import Pagination from "../../component/Pagination";
-import type { AppDispatch, RootState } from "../../redux/store";
-import {
-  fetchJobRentals,
-  deleteJobRental,
-  completeJobRental,
-  addJobRental,
-  JobRental,
-} from "../../redux/slices/jobsSlice";
 import { Table, Column } from "../../component/Table";
-import JobForm, { JobFormValues } from "../../component/JobForm";
+import JobForm from "@/app/component/JobForm";
 
 const JobRentalManagement: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const {
+    currentPage,
+    setCurrentPage,
+    currentData,
+    totalPages,
+    loading,
+    error,
+    handleDelete,
+    handleComplete,
+    handleAdd,
+  } = useJobRentals();
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { data, loading, error } = useSelector(
-    (state: RootState) => state.jobs
-  );
   const [showAddModal, setShowAddModal] = useState(false);
-
-  useEffect(() => {
-    dispatch(fetchJobRentals());
-  }, [dispatch]);
-
-  const indexOfLastItem = currentPage * pageSize;
-  const indexOfFirstItem = indexOfLastItem - pageSize;
-  const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(data.length / pageSize);
-
-  const handleDelete = (id: number) => {
-    dispatch(deleteJobRental(id));
-  };
-
-  const handleComplete = (rentalId: number) => {
-    dispatch(completeJobRental(rentalId));
-  };
-
-  const handleAdd = () => {
-    setShowAddModal(true);
-  };
-
-  const handleFormSubmit = (values: JobFormValues) => {
-    dispatch(
-      addJobRental({
-        maCongViec: Number(values.jobId),
-        maNguoiThue: Number(values.renterId),
-        ngayThue: new Date().toISOString(),
-        hoanThanh: values.completed,
-      })
-    );
-    setShowAddModal(false);
-  };
 
   const columns: Column<JobRental>[] = [
     { header: "ID", body: "id" },
@@ -91,12 +55,21 @@ const JobRentalManagement: React.FC = () => {
     },
   ];
 
+  const handleFormSubmit = async (values: JobFormValues): Promise<void> => {
+    handleAdd({
+      jobId: Number(values.jobId),
+      renterId: Number(values.renterId),
+      completed: values.completed,
+    });
+    setShowAddModal(false);
+  };
+
   return (
     <div className="my-48 container">
       <h1 className="text-2xl font-bold mb-4">Job Management</h1>
       <div className="mb-4 flex justify-between items-center">
         <button
-          onClick={handleAdd}
+          onClick={() => setShowAddModal(true)}
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
           Add Job
@@ -122,7 +95,7 @@ const JobRentalManagement: React.FC = () => {
                 completed: false,
               }}
               onSubmit={handleFormSubmit}
-              onCancel={() => setShowAddModal(false)}
+              onClose={() => setShowAddModal(false)}
             />
           </div>
         </div>

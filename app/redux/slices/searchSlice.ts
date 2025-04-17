@@ -1,12 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { jobAPI } from "../../services/apiService";
 
-interface SearchState {
-  results: any[];
-  loading: boolean;
-  error: string | null;
-}
-
 const initialState: SearchState = {
   results: [],
   loading: false,

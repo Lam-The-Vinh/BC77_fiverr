@@ -3,13 +3,6 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { editValidationSchema } from "../utils/validationSchema";
-import { User } from "../redux/slices/userSlice";
-
-interface EditUserModalProps {
-  user: User;
-  onClose: () => void;
-  onSubmit: (values: any) => Promise<any>;
-}
 
 const EditUserModal: React.FC<EditUserModalProps> = ({
   user,
@@ -27,7 +20,6 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             password: "",
             phone: user.phone || "",
             birthday: user.birthday || "",
-            avatar: user.avatar || "",
             gender: user.gender ? "true" : "false",
             role: user.role || "",
             skill: (user.skill || []).join(", "),
@@ -147,21 +139,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                   className="text-red-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block" htmlFor="avatar">
-                  Avatar
-                </label>
-                <Field
-                  name="avatar"
-                  type="text"
-                  className="w-full border rounded px-2 py-1"
-                />
-                <ErrorMessage
-                  name="avatar"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
+
               <div>
                 <label className="block" htmlFor="gender">
                   Gender

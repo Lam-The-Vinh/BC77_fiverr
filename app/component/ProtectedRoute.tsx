@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { showWarning } from "../utils/toastHelper";
 
 interface ProtectedRouteProps {
   requiredRole: string;
@@ -15,19 +16,26 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
 }) => {
   const user = useSelector((state: RootState) => state.auth.user);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.push("/auth/login");
-    } else if (user.role !== requiredRole) {
-      router.push("/");
-    } else if (user.role === requiredRole) {
-      router.push("/admin");
-    }
-  }, [user, requiredRole, router]);
+    setIsClient(true);
+  }, []);
 
-  if (!user || user.role !== requiredRole) return null;
+  useEffect(() => {
+    if (isClient) {
+      if (!user) {
+        router.push("/");
+        showWarning("You do not have permission to access this page.");
+      } else if (user.role !== requiredRole) {
+        router.push("/");
+        showWarning("You do not have the required role to access this page.");
+      }
+    }
+  }, [isClient, user, requiredRole, router]);
+
+  if (!isClient || !user || user.role !== requiredRole) return null;
 
   return <>{children}</>;
 };

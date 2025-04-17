@@ -1,30 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { categoryAPI } from "../../services/apiService";
 
-interface ChiTietLoai {
-    id: number;
-    tenChiTiet: string;
-  }
-
-interface NhomChiTietLoai {
-    id: number;
-    tenNhom: string;
-    hinhAnh: string;
-    dsChiTietLoai: ChiTietLoai[];
-  }
-  
-  interface CategoryDetail {
-    id: number;
-    tenLoaiCongViec: string;
-    dsNhomChiTietLoai: NhomChiTietLoai[];
-  }
-
-interface CategoryDetailState {
-  detail: CategoryDetail | null;
-  loading: boolean;
-  error: string | null;
-}
-
 const initialState: CategoryDetailState = {
   detail: null,
   loading: false,
@@ -32,17 +8,16 @@ const initialState: CategoryDetailState = {
 };
 
 export const fetchCategoryDetail = createAsyncThunk(
-    "categoryDetail/fetchCategoryDetail",
-    async (id: number | string, { rejectWithValue }) => {
-      try {
-        const response = await categoryAPI.getCategoryDetail(id);
-        return response.content[0]; 
-      } catch (error: any) {
-        return rejectWithValue(error.message);
-      }
+  "categoryDetail/fetchCategoryDetail",
+  async (id: number | string, { rejectWithValue }) => {
+    try {
+      const response = await categoryAPI.getCategoryDetail(id);
+      return response.content[0];
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-  );
-  
+  }
+);
 
 const categoryDetailSlice = createSlice({
   name: "categoryDetail",
