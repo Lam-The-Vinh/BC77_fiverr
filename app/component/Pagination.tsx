@@ -8,7 +8,10 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const getPageNumbers = (currentPage: number, totalPages: number): (number | string)[] => {
+const getPageNumbers = (
+  currentPage: number,
+  totalPages: number
+): (number | string)[] => {
   const pages: (number | string)[] = [];
 
   if (totalPages <= 7) {
@@ -37,7 +40,11 @@ const getPageNumbers = (currentPage: number, totalPages: number): (number | stri
   return pages;
 };
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   if (totalPages <= 1) return null;
 
   const pages = getPageNumbers(currentPage, totalPages);
@@ -49,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
           <li>
             <button
               onClick={() => onPageChange(currentPage - 1)}
-              className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+              className="px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600"
             >
               Prev
             </button>
@@ -66,8 +73,8 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
                 onClick={() => onPageChange(page)}
                 className={`px-3 py-1 rounded border ${
                   page === currentPage
-                    ? "bg-blue-500 text-white border-blue-500"
-                    : "bg-white text-blue-500 border-blue-300 hover:bg-blue-100"
+                    ? "bg-green-500 text-white border-green-500"
+                    : "bg-white text-green-500 border-green-300 hover:bg-green-100"
                 }`}
               >
                 {page}
@@ -79,7 +86,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
           <li>
             <button
               onClick={() => onPageChange(currentPage + 1)}
-              className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+              className="px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600"
             >
               Next
             </button>

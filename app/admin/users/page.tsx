@@ -32,16 +32,25 @@ const UsersPage: React.FC = () => {
     { header: "Email", body: "email" },
     { header: "Role", body: "role" },
     { header: "Skill", body: (user) => user.skill?.join(", ") || "" },
-    { header: "Certification", body: (user) => user.certification?.join(", ") || "" },
+    {
+      header: "Certification",
+      body: (user) => user.certification?.join(", ") || "",
+    },
     { header: "BookingJob", body: (user) => user.bookingJob?.join(", ") || "" },
     {
       header: "Actions",
       body: (user) => (
         <div className="flex space-x-2">
-          <button onClick={() => setEditingUser(user)} className="text-blue-600 hover:underline">
+          <button
+            onClick={() => setEditingUser(user)}
+            className="text-blue-600 hover:underline"
+          >
             Edit
           </button>
-          <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:underline">
+          <button
+            onClick={() => handleDelete(user.id)}
+            className="text-red-600 hover:underline"
+          >
             Delete
           </button>
         </div>
@@ -56,7 +65,7 @@ const UsersPage: React.FC = () => {
         <SearchBar onSearch={handleSearch} placeholder="Search by name" />
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-green-500 text-white px-4 py-2 rounded"
         >
           Add User
         </button>
@@ -76,7 +85,10 @@ const UsersPage: React.FC = () => {
       )}
 
       {showAddModal && (
-        <AddUserModal onClose={() => setShowAddModal(false)} onSubmit={handleAddUser} />
+        <AddUserModal
+          onClose={() => setShowAddModal(false)}
+          onSubmit={handleAddUser}
+        />
       )}
 
       {editingUser && (
